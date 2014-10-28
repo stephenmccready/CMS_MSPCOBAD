@@ -1,0 +1,60 @@
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+
+Create procedure [dbo].[ImportMSPCOBAD] @path As varChar(128), @filename As varChar(128), @emailRecipient As varchar(128)
+As
+
+Begin
+/* Inital set up of raw input table
+Drop Table [dbo].[tbl_MSPCOBAD_In]
+Create Table [dbo].[tbl_MSPCOBAD_In] (col001 varchar(max))
+*/
+
+Truncate Table [dbo].[tbl_MSPCOBAD_In]
+
+Declare @BulkCmd As nvarChar(4000)
+Set		@BulkCmd = "BULK INSERT tbl_MSPCOBAD_In FROM '"+@path+@filename+"' WITH (FIELDTERMINATOR = '\n')"
+
+Exec	(@BulkCmd)
+
+Declare @today As DateTime
+Set @today=getDate()
+
+Insert	Into [dbo].[tbl_MSPCOBAD_Detail]
+
+Select	Cast(SUBSTRING(MI.Col001,1,12) As VarChar(12)) As [RRB-HIC-NUM],
+		Cast(SUBSTRING(MI.Col001,13,8) As VarChar(8)) As [DateofBirth],
+		Cast(SUBSTRING(MI.Col001,21,1) As VarChar(1)) As [GenderCode],
+		Cast(SUBSTRING(MI.Col001,22,5) As VarChar(5)) As [ContractNumber],
+		Cast(SUBSTRING(MI.Col001,27,3) As VarChar(3)) As [PBPNumber],
+		Cast(SUBSTRING(MI.Col001,30,8) As VarChar(8)) As [MSPCoverageEffectiveDate],
+		Cast(SUBSTRING(MI.Col001,38,8) As VarChar(8)) As [MSPCoverageTerminationDate],
+		Cast(SUBSTRING(MI.Col001,46,1) As VarChar(1)) As [PrimaryInsuranceCode],
+		Cast(SUBSTRING(MI.Col001,47,5) As VarChar(5)) As [COBContractorNumber],
+		Cast(SUBSTRING(MI.Col001,52,32) As VarChar(32)) As [InsurerName],
+		Cast(SUBSTRING(MI.Col001,84,32) As VarChar(32)) As [InsurerAddressLine1],
+		Cast(SUBSTRING(MI.Col001,116,32) As VarChar(32)) As [InsurerAddressLine2],
+		Cast(SUBSTRING(MI.Col001,148,15) As VarChar(15)) As [InsurerCityname],
+		Cast(SUBSTRING(MI.Col001,163,2) As VarChar(2)) As [InsurerStateCode],
+		Cast(SUBSTRING(MI.Col001,165,9) As VarChar(9)) As [InsurerZipCode],
+		Cast(SUBSTRING(MI.Col001,174,17) As VarChar(17)) As [PolicyNumber],
+		Cast(SUBSTRING(MI.Col001,191,8) As VarChar(8)) As [CreationDate],
+		Cast(SUBSTRING(MI.Col001,199,5) As VarChar(5)) As [MSPOriginatingContractor],
+		Cast(SUBSTRING(MI.Col001,204,5) As VarChar(5)) As [MSPUpdatingContractor],
+		Cast(SUBSTRING(MI.Col001,209,1) As VarChar(1)) As [DeleteIndicator],
+		Cast(SUBSTRING(MI.Col001,210,1) As VarChar(1)) As [ValidityIndicator],
+		Cast(SUBSTRING(MI.Col001,211,8) As VarChar(8)) As [MSPLastMaintenanceDate],
+		Cast(SUBSTRING(MI.Col001,219,282) As VarChar(282)) As [Filler01],
+		@today As DateImported,
+		@filename As [FileName]
+From	 [dbo].[tbl_MSPCOBAD_In] As MI
+Left	Outer Join  [dbo].[tbl_MSPCOBAD_Detail] As MD
+		On MD.[RRB-HIC-NUM]=SUBSTRING(MI.Col001,1,12)
+		And MD.[FileName]=@filename
+Where	  SUBSTRING(MI.Col001,27,3) <> ' '
+And    SUBSTRING(MI.Col001,1,8) <> 'CMSMSPIH'
+And    SUBSTRING(MI.Col001,1,8) <> 'CMSMSPIT'
+And   MD.[RRB-HIC-NUM] Is Null
+End
