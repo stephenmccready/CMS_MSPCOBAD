@@ -1,0 +1,42 @@
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+SET ANSI_PADDING ON
+GO
+
+CREATE TABLE [dbo].[tbl_MSPCOBAD_Detail](
+	[MSPCOBADDetailId] [int] IDENTITY(1,1) NOT NULL,
+	[RRB-HIC-NUM] [varchar](12) NULL,
+	[DateofBirth] [varchar](8) NULL,
+	[GenderCode] [varchar](1) NULL,
+	[ContractNumber] [varchar](5) NULL,
+	[PBPNumber] [varchar](3) NULL,
+	[MSPCoverageEffectiveDate] [varchar](8) NULL,
+	[MSPCoverageTerminationDate] [varchar](8) NULL,
+	[PrimaryInsuranceCode] [varchar](1) NULL,
+	[COBContractorNumber] [varchar](5) NULL,
+	[InsurerName] [varchar](32) NULL,
+	[InsurerAddressLine1] [varchar](32) NULL,
+	[InsurerAddressLine2] [varchar](32) NULL,
+	[InsurerCityname] [varchar](15) NULL,
+	[InsurerStateCode] [varchar](2) NULL,
+	[InsurerZipCode] [varchar](9) NULL,
+	[PolicyNumber] [varchar](17) NULL,
+	[CreationDate] [varchar](8) NULL,
+	[MSPOriginatingContractor] [varchar](5) NULL,
+	[MSPUpdatingContractor] [varchar](5) NULL,
+	[DeleteIndicator] [varchar](1) NULL,
+	[ValidityIndicator] [varchar](1) NULL,
+	[MSPLastMaintenanceDate] [varchar](8) NULL,
+	[Filler01] [varchar](282) NULL,
+	[DataImported] [datetime] NOT NULL,
+	[FileName] [varchar](128) NOT NULL
+) ON [PRIMARY]
+
+GO
+
+SET ANSI_PADDING OFF
+GO
