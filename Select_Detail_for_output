@@ -1,0 +1,44 @@
+Select	Rtrim([RRB-HIC-NUM]) As [RRB_HIC_NUM]
+		,Cast(Case	When [DateofBirth] = '        ' Then '          '
+	        When [DateofBirth] = '00000000' Then '          '
+		 	Else SubString([DateofBirth],1,4) +'-'+ SubString([DateofBirth],5,2)+'-'+SubString([DateofBirth],7,2) End As VarChar(10)) As [DateofBirth] 
+		,Cast(Case  When [GenderCode] = '0' Then 'Unknown'
+	        When [GenderCode] = '1' Then 'Male   '
+			When [GenderCode] = '2' Then 'Female '
+			End As VarChar(7)) As [GenderCode] 
+		,Rtrim([ContractNumber]) As [ContractNumber]
+		,Rtrim([PBPNumber]) As [PBPNumber]
+		,Cast(Case	When [MSPCoverageEffectiveDate] = '        ' Then '          '
+	        When [MSPCoverageEffectiveDate] = '00000000' Then '          '
+		  	Else SubString([MSPCoverageEffectiveDate],1,4) +'-'+ SubString([MSPCoverageEffectiveDate],5,2)+'-'+SubString([MSPCoverageEffectiveDate],7,2) End As VarChar(10)) As [MSPCoverageEffectiveDate] 
+		,Cast(Case	When [MSPCoverageTerminationDate] = '        ' Then '          '
+	        When [MSPCoverageTerminationDate] = '00000000' Then '          '
+		  	Else SubString([MSPCoverageTerminationDate],1,4) +'-'+ SubString([MSPCoverageTerminationDate],5,2)+'-'+SubString([MSPCoverageTerminationDate],7,2) End As VarChar(10)) As [MSPCoverageTerminationDate]  
+		,Cast(Case  When [PrimaryInsuranceCode] = 'A' Then '(Working Aged)'
+	        When [PrimaryInsuranceCode] = 'B' Then '(ESRD)        '
+			When [PrimaryInsuranceCode] = 'G' Then '(Disabled)    '
+	        End As VarChar(14)) As [PrimaryInsuranceCode] 
+		,Rtrim([COBContractorNumber]) As [COBContractorNumber]
+		,Rtrim([InsurerName]) As [InsurerName]
+		,Rtrim([InsurerAddressLine1]) As [InsurerAddressLine1]
+		,Rtrim([InsurerAddressLine2]) As [InsurerAddressLine2]
+		,Rtrim([InsurerCityname]) As [InsurerCityname]
+		,Rtrim([InsurerStateCode]) As [InsurerStateCode]
+		,Rtrim([InsurerZipCode]) As [InsurerZipCode]
+		,Rtrim([PolicyNumber]) As [PolicyNumber]
+		,Cast(Case	When [CreationDate] = '        ' Then '          '
+	        When [CreationDate] = '00000000' Then '          '
+		  	Else SubString([CreationDate],1,4) +'-'+ SubString([CreationDate],5,2)+'-'+SubString([CreationDate],7,2) End As VarChar(10)) As [CreationDate] 
+		,Rtrim([MSPOriginatingContractor]) As [MSPOriginatingContractor]
+		,Rtrim([MSPUpdatingContractor]) As [MSPUpdatingContractor]
+		,Rtrim([DeleteIndicator]) As [DeleteIndicator]
+		,Rtrim([ValidityIndicator]) As [ValidityIndicator]
+		,Cast(Case	When [MSPLastMaintenanceDate] = '        ' Then '          '
+	        When [MSPLastMaintenanceDate] = '00000000' Then '          '
+		  	Else SubString([MSPLastMaintenanceDate],1,4) +'-'+ SubString([MSPLastMaintenanceDate],5,2)+'-'+SubString([MSPLastMaintenanceDate],7,2) End As VarChar(10)) As [MSPLastMaintenanceDate] 
+		,Rtrim([Filler01]) As [Filler01]
+		,Rtrim([DataImported]) As [DataImported]
+		,Rtrim([FileName]) As [FileName]
+From	[dbo].[tbl_MSPCOBAD_Detail]
+Where	[RRB-HIC-NUM] <> ''
+Order	by [RRB-HIC-NUM]
